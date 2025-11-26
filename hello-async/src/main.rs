@@ -1,4 +1,4 @@
-use trpl::Html;
+use trpl::{Either, Html};
 
 fn main() {
     let args: Vec<String> = std::env::args().collect();
@@ -13,8 +13,8 @@ fn main() {
 }
 
 async fn page_title(url: &str) -> Option<String> {
-    let response_text = trpl::get(url).await.text().await;
-    Html::parse(&response_text)
+    let text = trpl::get(url).await.text().await;
+    Html::parse(&text)
         .select_first("title")
         .map(|title_element| title_element.inner_html())
 }
