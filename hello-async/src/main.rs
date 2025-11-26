@@ -12,7 +12,7 @@ fn main() {
                 Either::Left(left) => left,
                 Either::Right(right) => right,
             };
-        
+
         println!("{url} returned first");
         match maybe_title {
             Some(title) => println!("Its page title is: '{title}'"),
@@ -21,9 +21,10 @@ fn main() {
     })
 }
 
-async fn page_title(url: &str) -> Option<String> {
+async fn page_title(url: &str) -> (&str, Option<String>) {
     let text = trpl::get(url).await.text().await;
-    Html::parse(&text)
+    let title = Html::parse(&text)
         .select_first("title")
-        .map(|title_element| title_element.inner_html())
+        .map(|title| title.inner_html());
+    (url, title)
 }
